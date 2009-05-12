@@ -45,15 +45,27 @@ namespace Converter
 
         private void doForest() // создаем деревья (все: полные, сокращенные)
         {
+            if (Global.pathRoot.IndexOf("\\Содержимое") != -1)
+            {
+                Global.pathRoot = Global.deleteParts(Global.pathRoot, new string[] { "\\Содержимое" });
+            }
+            try
+            {
+                Directory.Delete(Global.pathRoot + "\\Меню", true);
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("Не могу обновить меню. Некоторые файлы меню открыты и не могут быть обработаны. Закройте все файлы и папки из папки Меню и повторите попытку", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
             fullTree = new TreeNode(Global.pathRoot);
             shortTree = new TreeNode(Global.pathRoot);
-
-            treeView1.Nodes.Clear();
+            
             mfs = new Folder(Global.pathRoot + "\\Содержимое", 0);
-
             mfs.initFullTree(fullTree);
             mfs.initShortTree(shortTree, Global.foldersNotIncludeString, new string[] { ".ppt", ".htm" });
 
+            treeView1.Nodes.Clear();
             treeView1.Nodes.Add(shortTree);
             treeView2.Nodes.Add(fullTree);
         }

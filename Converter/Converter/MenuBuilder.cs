@@ -56,17 +56,29 @@ namespace Converter
             {
                 StreamWriter sw = new StreamWriter(workDir + ".htm");
 
+                string target_string;
+                if (depth == 1)
+                {
+                    target_string = "rightFrame";
+                }
+                else
+                {
+                    target_string = "_self";
+                }
+
+                // пробегаем по всем папкам
                 foreach (Folder fold in f.folderList)
                 {
+                    // не заходим в папки, которые заканчиваются на .филес
                     if (!fold.name.EndsWith(Global.foldersNotIncludeString))
                     {
-                        menu += doTag("ul", doTag("li", doTag("a", Global.getFileOrFolderName(fold.name), new Param[] { new Param("href", Global.getFileOrFolderName(f.name) + "\\" + Global.getFileOrFolderName(fold.name) + ".htm"), new Param("target", "_self") })));
+                        menu += doTag("ul", doTag("li", doTag("a", Global.getFileOrFolderName(fold.name), new Param[] { new Param("href", Global.getFileOrFolderName(f.name) + "\\" + Global.getFileOrFolderName(fold.name) + ".htm"), new Param("target", target_string) })));
                     }
                 }
 
                 foreach (string s in f.fileList)
                 {
-                    menu += doTag("ul", doTag("li", doTag("a", Global.getFileOrFolderName(Global.trimExtension(Global.trimRootPath(s), new string[] { ".ppt", ".htm", ".doc" })), new Param[] { new Param("href", doDot(depth) + Global.trimRootPath(s)), new Param("target", "_self") })));
+                    menu += doTag("ul", doTag("li", doTag("a", Global.getFileOrFolderName(Global.deleteParts(Global.trimRootPath(s), new string[] { ".ppt", ".htm", ".doc" })), new Param[] { new Param("href", doDot(depth) + Global.trimRootPath(s)), new Param("target", target_string) })));
                 }
 
                 string body = doTag("html", doTag("head", doTag("title", "Учреждение образования «Гродненский государственный университет имени Янки Купалы». Общевойсковая кафедра.") + metaConst + linkToCss(depth)) + menu);
@@ -75,6 +87,11 @@ namespace Converter
                 sw.Close();
             }
 
+            /// <summary>
+            ///  лепит точки чтобы путь получился относительный
+            /// </summary>
+            /// <param name="count"></param>
+            /// <returns></returns>
             public string doDot(int count)
             {
                 string res="";

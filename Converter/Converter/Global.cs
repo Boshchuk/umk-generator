@@ -63,15 +63,15 @@ namespace Converter
             return t;
         }
         /// <summary>
-        /// Отрезает из строки расширения
+        /// Убирает из строки куски указанные в параметре
         /// </summary>
         /// <param name="source">Исходная строка</param>
-        /// <param name="extensions">Массив расширений</param>
+        /// <param name="parts">Массив кусков строк</param>
         /// <returns>Строка без расширений</returns>
-        public static string trimExtension(string source, string[] extensions)
+        public static string deleteParts(string source, string[] parts)
         {
             int i = 0;
-            foreach (string s in extensions)
+            foreach (string s in parts)
             {
                 i = source.LastIndexOf(s);
                 if (i > 0)
