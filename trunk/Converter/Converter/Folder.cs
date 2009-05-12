@@ -86,7 +86,6 @@ namespace Converter
             }
             foreach (string j in Directory.GetFiles(Name, Global.fileSearchPattern)) // Запоминаем все файлы в каталоге
             {   
-                //FileList.Add(j.Replace('\\', '/'));
                 FileList.Add(j);
             }
         }
@@ -153,7 +152,7 @@ namespace Converter
             }
             foreach (string j in FileList)
             {
-                tn.Nodes.Add(Global.getFileOrFolderName(Global.trimExtension(j, extensions)));
+                tn.Nodes.Add(Global.getFileOrFolderName(Global.deleteParts(j, extensions)));
             }
 
             if ((FileList.Count == 0) && (FolderList.Count == 0))
