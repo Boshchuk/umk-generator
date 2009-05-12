@@ -20,17 +20,16 @@ namespace Converter
             string h = "";
             foreach (Folder item in f.folderList)
             {
-                h = Global.pathToMenu + Global.trimRootPath(f.name);
+                h = Global.pathToMenu + "\\" + Global.trimRootPath(f.name);
                 Directory.CreateDirectory(h);
                 dirMenu(item);
             }
-            //if (f.folderList.Count == 0)
-            //{
-            //    if (f.fileList.Count != 0)
-            //    {
-            //        htmlDoc hdoc = new htmlDoc(f, depth, h);
-            //    }
-            //}
+
+            if (f.folderList.Count == 0)
+            foreach (string item in f.fileList)
+            {
+                h = Global.pathToMenu + "\\" + Global.trimRootPath(f.name);
+            }
             htmlDoc hdoc = new htmlDoc(f, depth, h);
             depth--;
         }
@@ -72,7 +71,7 @@ namespace Converter
                     // не заходим в папки, которые заканчиваются на .филес
                     if (!fold.name.EndsWith(Global.foldersNotIncludeString))
                     {
-                        menu += doTag("ul", doTag("li", doTag("a", Global.getFileOrFolderName(fold.name), new Param[] { new Param("href", Global.getFileOrFolderName(f.name) + "\\" + Global.getFileOrFolderName(fold.name) + ".htm"), new Param("target", target_string) })));
+                        menu += doTag("ul", doTag("li", doTag("a", Global.getFileOrFolderName(fold.name), new Param[] { new Param("href", Global.getFileOrFolderName(f.name) + @"\" + Global.getFileOrFolderName(fold.name) + ".htm"), new Param("target", target_string) })));
                     }
                 }
 
@@ -97,7 +96,7 @@ namespace Converter
                 string res="";
                 for (int i=0; i<count; i++)
                 {
-                    res+="..\\";
+                    res+=@"..\";
                 }
                 return res;
             }
@@ -107,7 +106,7 @@ namespace Converter
                 string dot = "";
                 for (int i = 0; i  < depth; i++)
                 {
-                    dot += @"../";
+                    dot += @"..\";
                 }
                 return (string.Format(@"<link href=""{0}index.files/style_all.css"" rel=""stylesheet"" type=""text/css"" >",dot));
             }

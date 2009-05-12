@@ -88,9 +88,9 @@ namespace Converter
         /// <returns>Относительный путь</returns>
         public static string trimRootPath(string source)
         {
-            int i = PathRoot.Length;
+            int i = PathRoot.Length + 1;
             int j = source.Length;
-            source = source.Substring(i, j-i);
+            source = source.Substring(i, j - i);
             return source;
         }
     }

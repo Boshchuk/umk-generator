@@ -40,7 +40,7 @@ namespace Converter
             folderBrowserDialog1.ShowDialog();
 
             Global.pathRoot = folderBrowserDialog1.SelectedPath;
-            Global.pathToMenu = Global.pathRoot + "\\Меню\\";
+            Global.pathToMenu = Global.pathRoot + "\\Меню";
         }
 
         private void doForest() // создаем деревья (все: полные, сокращенные)
@@ -61,7 +61,7 @@ namespace Converter
             fullTree = new TreeNode(Global.pathRoot);
             shortTree = new TreeNode(Global.pathRoot);
             
-            mfs = new Folder(Global.pathRoot + "\\Содержимое", 0);
+            mfs = new Folder(Global.pathRoot + @"\Содержимое", 0);
             mfs.initFullTree(fullTree);
             mfs.initShortTree(shortTree, Global.foldersNotIncludeString, new string[] { ".ppt", ".htm" });
 
