@@ -41,6 +41,7 @@ namespace Converter
 
             Global.pathRoot = folderBrowserDialog1.SelectedPath;
             Global.pathToMenu = Global.pathRoot + "\\Меню";
+            RenderToLabel(label1, Global.pathRoot);
         }
 
         private void doForest() // создаем деревья (все: полные, сокращенные)
@@ -51,7 +52,7 @@ namespace Converter
             }
             try
             {
-                Directory.Delete(Global.pathRoot + "\\Меню", true);
+                Directory.Delete(Global.pathToMenu, true);
             }
             catch (IOException)
             {
@@ -61,9 +62,9 @@ namespace Converter
             fullTree = new TreeNode(Global.pathRoot);
             shortTree = new TreeNode(Global.pathRoot);
             
-            mfs = new Folder(Global.pathRoot + @"\Содержимое", 0);
+            mfs = new Folder(Global.pathRoot + "\\Содержимое", 0);
             mfs.initFullTree(fullTree);
-            mfs.initShortTree(shortTree, Global.foldersNotIncludeString, new string[] { ".ppt", ".htm" });
+            mfs.initShortTree(shortTree, Global.foldersNotIncludeString, new string[] { ".ppt", ".htm", ".doc" });
 
             treeView1.Nodes.Clear();
             treeView1.Nodes.Add(shortTree);
