@@ -53,7 +53,7 @@ namespace Converter
             head.AddChild(title);
 
             Tag link = new Tag("link", false);
-            link.AddParam("href", doDot(depth) + "index.files\style_all.css");
+            link.AddParam("href", doDot(depth) + "index.files\\style_all.css");
             link.AddParam("rel", "stylesheet");
             link.AddParam("type", "text/css");
             head.AddChild(link);
