@@ -107,7 +107,7 @@ namespace Converter
                 tn.Nodes.Add(j);
             }
             
-            if ((FileList.Count == 0) || (FolderList.Count == 0))
+            if ((FileList.Count == 0) && (FolderList.Count == 0))
             {
                 tn.Nodes.Add(Global.emptyFolder);
             }
