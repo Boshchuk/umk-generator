@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.IO;
 
@@ -14,19 +9,20 @@ namespace Converter
         /// <summary>
         /// Структура файлов и папок
         /// </summary>
-        private Folder mfs;
-        private TreeNode fullTree, shortTree;
-        private MenuBuilder myMenu;
+        private Folder _mfs;
+        private TreeNode _fullTree;
+        private TreeNode _shortTree;
+        private MenuBuilder _myMenu;
 
         public Form1()
         {
             InitializeComponent();
         }
 
-        private void doStartup()
+        private void DoStartup()
         {
-            Global.pathRoot = "";
-            RenderToLabel(label1, "Текущий каталог: \n" + Global.pathRoot);
+            Global.PathRoot = "";
+            RenderToLabel(label1, "Текущий каталог: \n" + Global.PathRoot);
         }
 
         private void RenderToLabel(Label screen, string source)
@@ -36,44 +32,45 @@ namespace Converter
 
         private void doChooseRootFolder()
         {
-            folderBrowserDialog1.SelectedPath = Global.pathRoot;
+            folderBrowserDialog1.SelectedPath = Global.PathRoot;
             folderBrowserDialog1.ShowDialog();
 
-            Global.pathRoot = folderBrowserDialog1.SelectedPath;
-            Global.pathToMenu = Global.pathRoot + "\\Меню";
-            RenderToLabel(label1, Global.pathRoot);
+            Global.PathRoot = folderBrowserDialog1.SelectedPath;
+            Global.PathToMenu = Global.PathRoot + "\\Меню";
+            RenderToLabel(label1, Global.PathRoot);
         }
-
-        private void doForest() // создаем деревья (все: полные, сокращенные)
+        // в корневой папке должна быть папка 'Содержимое'
+        // в ней и проводится анализ
+        private void DoForest() // создаем деревья (все: полные, сокращенные)
         {
-            if (Global.pathRoot.IndexOf("\\Содержимое") != -1)
+            if (Global.PathRoot.IndexOf("\\Содержимое", StringComparison.Ordinal) != -1)
             {
-                Global.pathRoot = Global.deleteParts(Global.pathRoot, new string[] { "\\Содержимое" });
+                Global.PathRoot = Global.DeleteParts(Global.PathRoot, new string[] { "\\Содержимое" });
             }
             try
             {
-                Directory.Delete(Global.pathToMenu, true);
+                Directory.Delete(Global.PathToMenu, true);
             }
-            catch (IOException)
+            catch (IOException exception)
             {
-                MessageBox.Show("Не могу обновить меню. Некоторые файлы меню открыты и не могут быть обработаны. Закройте все файлы и папки из папки Меню и повторите попытку", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(exception.Message + "Не могу обновить меню. Некоторые файлы меню открыты и не могут быть обработаны. Закройте все файлы и папки из папки Меню и повторите попытку", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
-            fullTree = new TreeNode(Global.pathRoot);
-            shortTree = new TreeNode(Global.pathRoot);
+            _fullTree = new TreeNode(Global.PathRoot);
+            _shortTree = new TreeNode(Global.PathRoot);
             
-            mfs = new Folder(Global.pathRoot + "\\Содержимое", 0);
-            mfs.initFullTree(fullTree);
-            mfs.initShortTree(shortTree, Global.foldersNotIncludeString, new string[] { ".ppt", ".htm", ".doc" });
+            _mfs = new Folder(Global.PathRoot + "\\Содержимое", 0);
+            _mfs.InitFullTree(_fullTree);
+            _mfs.initShortTree(_shortTree, Global.FoldersNotIncludeString, new string[] { ".ppt", ".htm", ".doc",".html" });
 
             treeView1.Nodes.Clear();
-            treeView1.Nodes.Add(shortTree);
-            treeView2.Nodes.Add(fullTree);
+            treeView1.Nodes.Add(_shortTree);
+            treeView2.Nodes.Add(_fullTree);
         }
 
-        private void doMenu()
+        private void DoMenu()
         {
-            myMenu = new MenuBuilder(mfs);
+            _myMenu = new MenuBuilder(_mfs);
         }
 
         private void button1_Click(object sender, EventArgs e) // кнопка "Выбрать папку"
@@ -83,15 +80,15 @@ namespace Converter
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            doStartup();
+            DoStartup();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void ButtonBuild_Click(object sender, EventArgs e)
         {
-            if (Global.pathRoot != "")
+            if (Global.PathRoot != string.Empty)
             {
-                doForest();
-                doMenu();
+                DoForest();
+                DoMenu();
             }
             else
             {

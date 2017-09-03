@@ -36,7 +36,7 @@
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.treeView2 = new System.Windows.Forms.TreeView();
-            this.button2 = new System.Windows.Forms.Button();
+            this.buttonBuild = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -63,9 +63,9 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Location = new System.Drawing.Point(93, 50);
@@ -112,22 +112,22 @@
             this.treeView2.Size = new System.Drawing.Size(615, 329);
             this.treeView2.TabIndex = 0;
             // 
-            // button2
+            // buttonBuild
             // 
-            this.button2.Location = new System.Drawing.Point(12, 95);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 39);
-            this.button2.TabIndex = 4;
-            this.button2.Text = "Построить";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.buttonBuild.Location = new System.Drawing.Point(12, 95);
+            this.buttonBuild.Name = "buttonBuild";
+            this.buttonBuild.Size = new System.Drawing.Size(75, 39);
+            this.buttonBuild.TabIndex = 4;
+            this.buttonBuild.Text = "Построить";
+            this.buttonBuild.UseVisualStyleBackColor = true;
+            this.buttonBuild.Click += new System.EventHandler(this.ButtonBuild_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(741, 437);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.buttonBuild);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
@@ -152,7 +152,7 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.TreeView treeView2;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button buttonBuild;
     }
 }
 

@@ -1,73 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Converter
 {
-    class Tag
+    internal class Tag
     {
-        private List<Tag> Childs;
-        private Dictionary<string, string> Params;
-        private bool hasPair;
-        private string Text, Name;
+        private readonly List<Tag> _childs;
+        private readonly Dictionary<string, string> _params;
+        private readonly bool _hasPair;
+        private string _innerText;
+        private readonly string _name;
 
-        public Tag(string Name)
+        public Tag(string name)
         {
-            Childs = new List<Tag>();
-            Params = new Dictionary<string, string>();
-            this.hasPair = true;
-            this.Name = Name;
+            _childs = new List<Tag>();
+            _params = new Dictionary<string, string>();
+            this._hasPair = true;
+            this._name = name;
         }
 
-        public Tag(string Name, bool hasPair)
+        public Tag(string name, bool hasPair)
         {
-            Childs = new List<Tag>();
-            Params = new Dictionary<string, string>();
-            this.hasPair = hasPair;
-            this.Name = Name;
+            _childs = new List<Tag>();
+            _params = new Dictionary<string, string>();
+            this._hasPair = hasPair;
+            this._name = name;
         }
 
         public void AddParam(string key, string value)
         {
-            Params.Add(key, value);
+            _params.Add(key, value);
         }
 
         public void AddChild(Tag child)
         {
-            Childs.Add(child);
+            _childs.Add(child);
         }
 
-        public void AddText(string text)
+        public void AddInnerText(string innerText)
         {
-            this.Text = text;
+            this._innerText = innerText;
         }
 
-        public string ConvertToHTML()
+        public string ConvertToHtml()
         {
-            string result = "";
+            var result = $"<{_name}";
 
-            result += "<" + Name;
-            foreach (string key in Params.Keys)
+            foreach (var key in _params.Keys)
             {
-                result += " " + key + "=" + @"""" + Params[key] + @"""" + " ";
+                result += $" {key}=\"{_params[key]}\" ";
             }
 
-            if (hasPair)
-            {
-                result += ">";
-            }
-            else
+            if (!_hasPair)
             {
                 result += "/>";
                 return result;
             }
 
-            foreach (Tag item in Childs)
+
+            result += ">";
+
+            foreach (var item in _childs)
             {
-                result += item.ConvertToHTML();
+                result += item.ConvertToHtml();
             }
 
-            result += Text + "</" + Name + ">";            
+            result += $"{_innerText}</{_name}>";
 
             return result;
         }

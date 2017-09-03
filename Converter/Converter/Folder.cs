@@ -1,59 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Collections;
 using System.IO;
 using System.Windows.Forms;
 
 namespace Converter
 {
-    class Folder
+    internal class Folder
     {
-        private List<string> FileList;
-        private List<Folder> FolderList;
-        private string Name;
-        private int Depth = 0;
-
         /// <summary>
         /// Файлы, находящиеся в данном каталоге
         /// </summary>
-        public List<string> fileList
-        {
-            get
-            {
-                return FileList;
-            }
-        }
+        public List<string> FileList { get; }
+
         /// <summary>
         /// Подкаталоги, находящиеся в данном каталоге
         /// </summary>
-        public List<Folder> folderList
-        {
-            get
-            {
-                return FolderList;
-            }
-        }
+        public List<Folder> FolderList { get; }
+
         /// <summary>
         /// Имя этого каталога
         /// </summary>
-        public string name
-        {
-            get
-            {
-                return Name;
-            }
-        }
+        public string Name { get; }
+
         /// <summary>
         /// Глубина его "вложенности" относительно корневого каталога
         /// </summary>
-        public int depth
-        {
-            get
-            {
-                return Depth;
-            }
-        }
+        public int Depth { get; } = 0;
 
         /// <summary>
         /// Конструктор объекта "каталог"
@@ -68,23 +40,26 @@ namespace Converter
             Depth = d;
             Name = path;
 
-            string[] Dirs;
+            string[] dirs;
 
             try // сканим на подкаталоги
             {
-                Dirs = Directory.GetDirectories(Name, Global.foldersSearchTemplate);
+                dirs = Directory.GetDirectories(Name, Global.FoldersSearchTemplate);
             }
             catch (UnauthorizedAccessException) // если нельзя этого делать (например, SystemVolumeInformation)
             {
-                MessageBox.Show("Попытка чтения каталога, доступ к которому запрещен.", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Попытка чтения каталога, доступ к которому запрещен.",
+                                "Внимание!",
+                                 MessageBoxButtons.OK,
+                                 MessageBoxIcon.Warning);
                 return;
             }
 
-            foreach (string i in Dirs) // Залазим в каждый из подкаталогов
+            foreach (var i in dirs) // Залазим в каждый из подкаталогов
             {
                 FolderList.Add(new Folder(i, Depth+1));
             }
-            foreach (string j in Directory.GetFiles(Name, Global.fileSearchPattern)) // Запоминаем все файлы в каталоге
+            foreach (var j in Directory.GetFiles(Name, Global.FileSearchPattern)) // Запоминаем все файлы в каталоге
             {   
                 FileList.Add(j);
             }
@@ -94,49 +69,51 @@ namespace Converter
         /// Заполняет TreeNode полным вариантом ссылок на файлы и папки. То есть TreeNode содержит полные пути к папкам\файлам
         /// </summary>
         /// <param name="tn">Корневой узел TreeNode</param>
-        public void initFullTree(TreeNode tn)
+        public void InitFullTree(TreeNode tn)
         {
-            foreach (Folder i in FolderList)
+            foreach (var i in FolderList)
             {
-                TreeNode node_child = new TreeNode(i.Name);
-                tn.Nodes.Add(node_child);
-                i.initFullTree(node_child);   
+                var nodeChild = new TreeNode(i.Name);
+                tn.Nodes.Add(nodeChild);
+                i.InitFullTree(nodeChild);
             }
-            foreach (string j in FileList)
+            foreach (var j in FileList)
             {
                 tn.Nodes.Add(j);
             }
             
-            if ((FileList.Count == 0) && (FolderList.Count == 0))
+            if (FileList.Count == 0 && FolderList.Count == 0)
             {
-                tn.Nodes.Add(Global.emptyFolder);
+                tn.Nodes.Add(Global.EmptyFolder);
             }
         }
         /// <summary>
-        /// Заполняет TreeNode сокращенным вариантом ссылок на файлы и папки. Каждый узел TreeNode содержит имя файла\каталога
+        /// Заполняет TreeNode сокращенным вариантом ссылок на файлы и папки.
+        /// Каждый узел TreeNode содержит имя файла\каталога
         /// </summary>
         /// <param name="tn">Корневой узел TreeNode</param>
         public void initShortTree(TreeNode tn)
         {
-            foreach (Folder i in FolderList)
+            foreach (var i in FolderList)
             {
-                TreeNode node_child = new TreeNode(Global.getFileOrFolderName(i.Name));
+                var node_child = new TreeNode(Global.GetFileOrFolderName(i.Name));
                 tn.Nodes.Add(node_child);
                 i.initShortTree(node_child);
             }
             foreach (string j in FileList)
             {
-                tn.Nodes.Add(Global.getFileOrFolderName(j));
+                tn.Nodes.Add(Global.GetFileOrFolderName(j));
             }
 
-            if ((FileList.Count == 0) && (FolderList.Count == 0))
+            if (FileList.Count == 0 && FolderList.Count == 0)
             {
-                tn.Nodes.Add(Global.emptyFolder);
+                tn.Nodes.Add(Global.EmptyFolder);
             }
         }
 
         /// <summary>
-        /// Заполняет TreeNode сокращенным вариантом ссылок на файлы и папки. Каждый узел TreeNode содержит имя файла\каталога. Плюс к этому из имен файлов вырезается расширение, а папки, не входящие в структуру меню, не включаются в структуру TreeNode.
+        /// Заполняет TreeNode сокращенным вариантом ссылок на файлы и папки.
+        /// Каждый узел TreeNode содержит имя файла\каталога. Плюс к этому из имен файлов вырезается расширение, а папки, не входящие в структуру меню, не включаются в структуру TreeNode.
         /// </summary>
         /// <param name="tn">Корневой узел TreeNode</param>
         public void initShortTree(TreeNode tn, string template, string[] extensions)
@@ -145,19 +122,19 @@ namespace Converter
             {
                 if (i.Name.LastIndexOf(template) == -1)
                 {
-                    TreeNode node_child = new TreeNode(Global.getFileOrFolderName(i.Name));
+                    TreeNode node_child = new TreeNode(Global.GetFileOrFolderName(i.Name));
                     tn.Nodes.Add(node_child);
                     i.initShortTree(node_child, template, extensions);
                 }
             }
             foreach (string j in FileList)
             {
-                tn.Nodes.Add(Global.getFileOrFolderName(Global.deleteParts(j, extensions)));
+                tn.Nodes.Add(Global.GetFileOrFolderName(Global.DeleteParts(j, extensions)));
             }
 
             if ((FileList.Count == 0) && (FolderList.Count == 0))
             {
-                tn.Nodes.Add(Global.emptyFolder);
+                tn.Nodes.Add(Global.EmptyFolder);
             }
         }
 

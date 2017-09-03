@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Converter
 {
@@ -9,48 +7,38 @@ namespace Converter
         /// <summary>
         /// Шаблон поиска для файлов
         /// </summary>
-        public static string fileSearchPattern = "*.*";
+        public static string FileSearchPattern = "*.*";
         /// <summary>
         /// Шаблон поиска для папок
         /// </summary>
-        public static string foldersSearchTemplate = "*.*";
+        public static string FoldersSearchTemplate = "*.*";
         /// <summary>
         /// Текст, который обозначает что данная папка пуста
         /// </summary>
-        public static string emptyFolder = "<нет элементов>";
+        public static string EmptyFolder = "<нет элементов>";
         /// <summary>
         /// Кусок строки в именах папок, которые не включаются в структуру меню. Пока что это тупо .files
         /// </summary>
-        public static string foldersNotIncludeString = ".files";
+        public static string FoldersNotIncludeString = ".files";
 
-        private static string PathRoot;
         /// <summary>
         /// Корневой каталог для данного проекта
         /// </summary>
-        public static string pathRoot
-        {
-            get
-            {
-                return PathRoot;
-            }
-            set
-            {
-                PathRoot = value;
-            }
-        }
+        public static string PathRoot { get; set; }
+
         /// <summary>
         /// Путь к каталогу, хранящему файлы меню
         /// </summary>
-        public static string pathToMenu;
+        public static string PathToMenu;
 
         /// <summary>
         /// Отрезает от строки имя файла\папки
         /// </summary>
         /// <param name="source">Исходная строка</param>
         /// <returns>Имя файла\папки</returns>
-        public static string getFileOrFolderName(string source)
+        public static string GetFileOrFolderName(string source)
         {
-            int p1 = source.LastIndexOf("\\") + 1;
+            var p1 = source.LastIndexOf("\\", StringComparison.Ordinal) + 1;
             string t;
             if (p1 > 0)
             {
@@ -68,17 +56,16 @@ namespace Converter
         /// <param name="source">Исходная строка</param>
         /// <param name="parts">Массив кусков строк</param>
         /// <returns>Строка без расширений</returns>
-        public static string deleteParts(string source, string[] parts)
+        public static string DeleteParts(string source, string[] parts)
         {
-            int i = 0;
-            foreach (string s in parts)
+            foreach (var s in parts)
             {
-                i = source.LastIndexOf(s);
+                var i = source.LastIndexOf(s, StringComparison.Ordinal);
                 if (i > 0)
                 {
                     return source.Substring(0, i);
                 }
-            }            
+            }
             return source;
         }
         /// <summary>
@@ -86,10 +73,10 @@ namespace Converter
         /// </summary>
         /// <param name="source">Исходная путь</param>
         /// <returns>Относительный путь</returns>
-        public static string trimRootPath(string source)
+        public static string TrimRootPath(string source)
         {
-            int i = PathRoot.Length + 1;
-            int j = source.Length;
+            var i = PathRoot.Length + 1;
+            var j = source.Length;
             source = source.Substring(i, j - i);
             return source;
         }
